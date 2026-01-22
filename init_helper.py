@@ -2,6 +2,8 @@ from os import rename, remove
 from os.path import exists, join, split
 from xml.etree.ElementTree import Element
 from shutil import copy
+from playwright.sync_api import sync_playwright
+from pathlib import Path
 from PyLyX.data.data import VERSION, CUR_FORMAT, USER_DIR, RTL_LANGS
 from PyLyX.objects.LyXobj import LyXobj
 from PyLyX.objects.Environment import Environment, Container
@@ -163,3 +165,42 @@ def export_bug_fix(before: bool):
                     new.write(line)
     remove(preferences)
     rename(preferences + '_n', preferences)
+
+
+def xhtml2pdf(input_path: str, output_path: str, page_format="A4", landscape=False, print_background=True,
+        margin=None, scale=1.0, display_header_footer=False, header_template="", footer_template=""):
+    """
+    Convert XHTML file to PDF with advanced options
+    """
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page()
+
+        # Load the XHTML file
+        file_path = Path(input_path).absolute().as_uri()
+        page.goto(file_path)
+
+        # Wait for all resources to load
+        page.wait_for_load_state("networkidle")
+
+        # Configure PDF options
+        pdf_options = {
+            "path": output_path,
+            "format": page_format,
+            "landscape": landscape,
+            "print_background": print_background,
+            "scale": scale,
+            "display_header_footer": display_header_footer,
+        }
+
+        if margin:
+            pdf_options["margin"] = margin
+
+        if display_header_footer:
+            pdf_options["header_template"] = header_template
+            pdf_options["footer_template"] = footer_template
+
+        # Generate PDF
+        page.pdf(**pdf_options)
+
+        browser.close()

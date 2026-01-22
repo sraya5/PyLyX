@@ -1,5 +1,6 @@
 from xml.etree.ElementTree import ElementTree, tostring, indent
 from subprocess import run, CalledProcessError, TimeoutExpired
+from os import remove
 from PyLyX.data.data import LYX_EXE, VERSION, CUR_FORMAT, BACKUP_DIR
 from PyLyX.objects.loader import load
 from PyLyX.xhtml.converter import convert
@@ -168,6 +169,13 @@ class LyX:
         with open(output_path, 'wb') as f:
             f.write(tostring(root, encoding='utf8'))
         return True
+
+    def export2pdf(self, output_path=''):
+        xhtml_path = correct_name(output_path, '.xhtml')
+        self.export2xhtml(xhtml_path, remove_old=True)
+        pdf_path = default_path(self.__full_path, '.pdf', output_path)
+        xhtml2pdf(xhtml_path, pdf_path)
+        remove(xhtml_path)
 
     def export2xml(self, output_path=''):
         """
