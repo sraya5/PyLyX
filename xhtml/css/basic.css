@@ -215,3 +215,10 @@ span.inset.Note.Note {display: none;}
 span.inset.Note.Note div {display: none;}
 span.inset.FormulaMacro {display: none;}
 span.inset.ERT {display: none;}
+
+@media print {
+    div.inset.Newpage {
+        page-break-after: always;
+        break-after: page;
+    }
+}

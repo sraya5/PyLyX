@@ -1,6 +1,5 @@
 from xml.etree.ElementTree import ElementTree, tostring, indent
 from subprocess import run, CalledProcessError, TimeoutExpired
-from os import remove
 from PyLyX.data.data import LYX_EXE, VERSION, CUR_FORMAT, BACKUP_DIR
 from PyLyX.objects.loader import load
 from PyLyX.xhtml.converter import convert

@@ -167,8 +167,8 @@ def export_bug_fix(before: bool):
     rename(preferences + '_n', preferences)
 
 
-def xhtml2pdf(input_path: str, output_path: str, page_format="A4", landscape=False, print_background=True,
-        margin=None, scale=1.0, display_header_footer=False, header_template="", footer_template=""):
+def xhtml2pdf(input_path: str, output_path: str, page_format='A4', landscape=False, print_background=True,
+        margin=None, scale=1.0, display_header_footer=False, header='', footer=''):
     """
     Convert XHTML file to PDF with advanced options
     """
@@ -181,26 +181,29 @@ def xhtml2pdf(input_path: str, output_path: str, page_format="A4", landscape=Fal
         page.goto(file_path)
 
         # Wait for all resources to load
-        page.wait_for_load_state("networkidle")
+        page.wait_for_load_state('networkidle')
+        page.wait_for_selector('.MathJax')
 
         # Configure PDF options
         pdf_options = {
-            "path": output_path,
-            "format": page_format,
-            "landscape": landscape,
-            "print_background": print_background,
-            "scale": scale,
-            "display_header_footer": display_header_footer,
+            'path': output_path,
+            'format': page_format,
+            'landscape': landscape,
+            'print_background': print_background,
+            'scale': scale,
+            'display_header_footer': display_header_footer,
+            'margin': {'top': '0', 'right': '0', 'bottom': '0', 'left': '0'}
         }
 
         if margin:
-            pdf_options["margin"] = margin
+            pdf_options['margin'] = margin
 
         if display_header_footer:
-            pdf_options["header_template"] = header_template
-            pdf_options["footer_template"] = footer_template
+            pdf_options['header_template'] = header
+            pdf_options['footer_template'] = footer
 
         # Generate PDF
+        page.emulate_media(media='print')
         page.pdf(**pdf_options)
 
         browser.close()

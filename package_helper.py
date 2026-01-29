@@ -4,6 +4,12 @@ from PyLyX.objects.LyXobj import LyXobj
 
 
 def correct_name(full_path: str, extension: str) -> str:
+    # for "copy as path" on Windows
+    if full_path.startswith('"'):
+        full_path = full_path[1:]
+    if full_path.endswith('"'):
+        full_path = full_path[:-1]
+
     extension = extension if extension.startswith('.') else '.' + extension
     path, name = split(full_path)
     name = splitext(name)[0]

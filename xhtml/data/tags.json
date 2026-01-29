@@ -36,6 +36,10 @@
       "toc": {"tag": "div"}
     },
     "Newline": {"newline": {"tag": "br"}},
+    "Newpage": {
+      "newpage": {"tag": "div"},
+      "pagebreak": {"tag": "div"}
+    },
     "Graphics": {"": {"tag": "img", "options": {"filename": "src"}}},
     "Float": {
     "table": {"tag": "div"},
