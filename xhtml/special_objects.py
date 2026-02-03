@@ -118,22 +118,6 @@ def perform_text(obj: LyXobj):
 def correct_formula(formula: str):
     while formula.endswith('\n'):
         formula = formula[:-1]
-    if formula.startswith('\\[') and formula.endswith('\\]'):
-        return formula
-    elif formula.startswith('\\['):
-        return formula +'\\]'
-    elif formula.startswith('\\begin{'):
-        return '\\[' + formula + '\\]'
-
-    if formula.startswith('$'):
-        formula = formula[1:]
-    if formula.endswith('$'):
-        formula = formula[:-1]
-    if formula.startswith('\\('):
-        formula = formula[2:]
-    if formula.endswith('\\)'):
-        formula = formula[:-2]
-    formula = '\\(' + formula + '\\)'
 
     i = formula.find(r'\text{')
     while i != -1:
@@ -144,8 +128,24 @@ def correct_formula(formula: str):
         if detect_lang(text) in RTL_LANGS:
             text = text[::-1]
         formula = start + text + end
-        i = formula.find(r'\text{', k+1)
-    return formula
+        i = formula.find(r'\text{', k + 1)
+
+    if formula.startswith(r'\[') and formula.endswith(r'\]'):
+        return formula
+    elif formula.startswith(r'\['):
+        return formula +r'\]'
+    elif formula.startswith(r'\begin{'):
+        return rf'\[{formula}\]'
+
+    if formula.startswith('$'):
+        formula = formula[1:]
+    if formula.endswith('$'):
+        formula = formula[:-1]
+    if formula.startswith(r'\('):
+        formula = formula[2:]
+    if formula.endswith(r'\)'):
+        formula = formula[:-2]
+    return rf'\({formula}\)'
 
 
 def prefixing(obj: LyXobj, prefix, sep=' '):

@@ -9,7 +9,7 @@ MATHJAX = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
 CSS_FOLDER = join(PACKAGE_PATH, 'xhtml\\css')
 BASIC_CSS, RTL_CSS, LTR_CSS = 'basic.css', 'rtl.css', 'ltr.css'
 SECTIONS = ('Part', 'Chapter', 'Section', 'Subsection', 'Subsubsection', 'Paragraph', 'Subparagraph')
-
+INFORMATION = {'language', 'font_roman', 'font_sans', 'font_typewriter', 'secnumdepth', 'tocdepth', 'textclass', 'html_math_output', 'html_css_as_file'}
 
 def scan_head(head: Environment):
     dictionary = {}
@@ -17,7 +17,7 @@ def scan_head(head: Environment):
         lst = e.get('class').split(maxsplit=1)
         if len(lst) == 2:
             class_, value = lst
-            if class_ in {'language', 'secnumdepth', 'tocdepth', 'textclass', 'html_math_output', 'html_css_as_file'}:
+            if class_ in INFORMATION:
                 if class_ in {'secnumdepth', 'tocdepth', 'html_math_output', 'html_css_as_file'}:
                     value = int(value)
                 dictionary[class_] = value

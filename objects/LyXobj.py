@@ -240,6 +240,11 @@ class LyXobj(Element):
                     return True
                 elif '*****' in dictionary[self.__command][self.__category]:
                     return True
+            elif '*****' in dictionary[self.__command]:
+                if self.__details in dictionary[self.__command]['*****']:
+                    return True
+                elif '*****' in dictionary[self.__command]['*****']:
+                    return True
 
         return False
 

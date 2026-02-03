@@ -4,6 +4,16 @@
     "english": {"": {"rank": -1}}
   },
   "index": {"Index": {"": {"rank": -1}}},
+  "font_roman": {"\"default\"": {"*****": {"rank": -1}}},
+  "font_sans": {"\"default\"": {"*****": {"rank": -1}}},
+  "font_typewriter": {"\"default\"": {"*****": {"rank": -1}}},
+  "leftmargin": {"*****": {"": {"rank": -1}}},
+  "topmargin": {"*****": {"": {"rank": -1}}},
+  "rightmargin": {"*****": {"": {"rank": -1}}},
+  "bottommargin": {"*****": {"": {"rank": -1}}},
+  "headheight": {"*****": {"": {"rank": -1}}},
+  "headsep": {"*****": {"": {"rank": -1}}},
+  "footskip": {"*****": {"": {"rank": -1}}},
   "secnumdepth": {
     "-1": {"": {"rank": -1}},
     "0": {"": {"rank": -1}},

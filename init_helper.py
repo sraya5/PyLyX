@@ -3,6 +3,7 @@ from os.path import exists, join, split
 from xml.etree.ElementTree import Element
 from shutil import copy
 from playwright.sync_api import sync_playwright
+from playwright._impl._errors import TimeoutError
 from pathlib import Path
 from PyLyX.data.data import VERSION, CUR_FORMAT, USER_DIR, RTL_LANGS
 from PyLyX.objects.LyXobj import LyXobj
@@ -73,7 +74,9 @@ def old_file_remove(output_path: str, remove_old: bool | None = None):
             remove(output_path)
 
 
-def xhtml_style(root: Environment | Element, output_path: str, css_copy: bool | None = None, info: dict | None = None):
+def xhtml_style(root: Environment | Element, output_path: str, css_copy: bool | None = None, info: dict | None = None,
+                additional_css=''):
+    css_text = LyXobj('style')
     if (css_copy is None and info.get('html_css_as_file') == 1) or css_copy is True:
         for e in root[0].iterfind("link[@type='text/css']"):
             full_path = e.get('href')
@@ -85,16 +88,23 @@ def xhtml_style(root: Environment | Element, output_path: str, css_copy: bool | 
                 print(f'invalid path: {full_path}')
             e.set('href', name)
     elif css_copy is None and info is not None and info.get('html_css_as_file') == 0:
-        css_copy = LyXobj('style')
         for e in root[0].iterfind("link[@type='text/css']"):
             full_path = e.get('href', '')
             if exists(full_path):
                 with open(full_path, 'r') as f:
-                    css_copy.text = css_copy.text + f.read()
+                    css_text.text = css_text.text + f.read()
                 root[0].remove(e)
             else:
                 print(f'invalid path: {full_path}')
-        root[0].append(css_copy)
+    font_css = ''
+    for font in {'font_roman', 'font_sans', 'font_typewriter'}:
+        font_css += f'--{font[len('font_'):]}: {info[font][len('"default" '):]};\n'
+    if font_css:
+        font_css = ':root {\n' + font_css + '}\n'
+        css_text.text = css_text.text + font_css
+    if additional_css:
+        css_text.text = css_text.text + '\n/* additional css */\n' + additional_css
+    root[0].append(css_text)
 
     for e in root[0].iterfind("img"):
         img_path = e.get('src', '')
@@ -167,11 +177,12 @@ def export_bug_fix(before: bool):
     rename(preferences + '_n', preferences)
 
 
-def xhtml2pdf(input_path: str, output_path: str, page_format='A4', landscape=False, print_background=True,
-        margin=None, scale=1.0, display_header_footer=False, header='', footer=''):
+def xhtml2pdf(input_path: str, output_path: str, margin=None, page_format='A4', landscape=False, print_background=True,
+        scale=1.0, display_header_footer=False, header='', footer=''):
     """
     Convert XHTML file to PDF with advanced options
     """
+    margin = {'top': '0', 'right': '0', 'bottom': '0', 'left': '0'} if margin is None else margin
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
@@ -182,7 +193,15 @@ def xhtml2pdf(input_path: str, output_path: str, page_format='A4', landscape=Fal
 
         # Wait for all resources to load
         page.wait_for_load_state('networkidle')
-        page.wait_for_selector('.MathJax')
+        try:
+            page.wait_for_function("""
+                () => window.MathJax?.typesetPromise !== undefined
+            """, timeout=5000)
+
+            # Then wait for typesetting to complete
+            page.evaluate("() => MathJax.typesetPromise")
+        except TimeoutError:
+            print('Warning: MathJax is not full loaded.')
 
         # Configure PDF options
         pdf_options = {
@@ -192,11 +211,8 @@ def xhtml2pdf(input_path: str, output_path: str, page_format='A4', landscape=Fal
             'print_background': print_background,
             'scale': scale,
             'display_header_footer': display_header_footer,
-            'margin': {'top': '0', 'right': '0', 'bottom': '0', 'left': '0'}
+            'margin': margin
         }
-
-        if margin:
-            pdf_options['margin'] = margin
 
         if display_header_footer:
             pdf_options['header_template'] = header

@@ -1,26 +1,18 @@
 from os.path import splitext
-from PyLyX import LyX, correct_name
-
-def lyx2xhtml(input_path: str, output_path: str):
-    output_path = correct_name(output_path, '.xhtml')
-    file = LyX(input_path)
-    file.export2xhtml(output_path)
-
-
-def lyx2pdf(input_path: str, output_path: str):
-    output_path = correct_name(output_path, '.pdf')
-    file = LyX(input_path)
-    file.export2pdf(output_path)
+from PyLyX import LyX
 
 
 if __name__ == '__main__':
     lyx_file = input('LyX file path: ')
-    output = input('output path: ')
+    output = input('output path (optional): ')
     fmt = input('export to format: ')
     output = output if output else splitext(lyx_file)[0]
+    file = LyX(lyx_file)
     if fmt == 'xhtml':
-        lyx2xhtml(lyx_file, output)
+        file.export2xhtml(output)
     elif fmt == 'pdf':
-        lyx2pdf(lyx_file, output)
+        file.export2pdf(output)
+    elif fmt == 'xml':
+        file.export2xml(output)
     else:
         print('invalid format')

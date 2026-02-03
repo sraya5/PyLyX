@@ -1,3 +1,4 @@
+from os.path import splitext
 from xml.etree.ElementTree import ElementTree, tostring, indent
 from subprocess import run, CalledProcessError, TimeoutExpired
 from PyLyX.data.data import LYX_EXE, VERSION, CUR_FORMAT, BACKUP_DIR
@@ -146,14 +147,15 @@ class LyX:
         export_bug_fix(False)
         return False
 
-    def export2xhtml(self, output_path='', css_files=(), css_folder=CSS_FOLDER, css_copy: bool | None = None, js_files=(), js_in_head=False,
-                     remove_old: bool | None = None, keep_data=False, replaces: dict | None = None):
+    def export2xhtml(self, output_path='', css_files=(), css_folder=CSS_FOLDER, css_copy: bool | None = None, additional_css='',
+                     js_files=(), js_in_head=False, remove_old: bool | None = None, keep_data=False, replaces: dict | None = None):
         """
         Export the LyX document to xhtml by the PyLyX package.
         :param output_path: path for save the exporting file.
         :param css_files: paths of css files for add to the xhtml file.
         :param css_folder: path for the default css files by the PyLyX package.
         :param css_copy: do you want copy the css files to the output path? (if False copy the css content to the xhtml output)
+        :param additional_css: additional css code.
         :param js_files: paths of js files for add to the xhtml file.
         :param js_in_head: do you want insert the js elements to the xhtml head? (if False insert the js elements to the body's end)
         :param remove_old: do you want to remove the old xhtml version (if exists)?
@@ -163,17 +165,30 @@ class LyX:
         output_path = default_path(self.__full_path, '.xhtml', output_path)
         old_file_remove(output_path, remove_old)
         root, info = convert(self.__doc, css_files, css_folder, js_files, js_in_head, keep_data, replaces)
-        xhtml_style(root, output_path, css_copy, info)
+        xhtml_style(root, output_path, css_copy, info, additional_css)
         indent(root)
         with open(output_path, 'wb') as f:
             f.write(tostring(root, encoding='utf8'))
         return True
 
+    def extract_pdf_settings(self):
+        header = self.__doc[0]
+        try:
+            margin = {'top': header.find('topmargin').category(),
+                      'right': header.find('rightmargin').category(),
+                      'bottom': header.find('bottommargin').category(),
+                      'left': header.find('leftmargin').category()}
+        except AttributeError:
+            margin = None
+        return margin
+
     def export2pdf(self, output_path=''):
-        xhtml_path = correct_name(output_path, '.xhtml')
-        self.export2xhtml(xhtml_path, remove_old=True)
+        xhtml_path = correct_name(splitext(output_path)[0] + '_for_pdf', '.xhtml')
         pdf_path = default_path(self.__full_path, '.pdf', output_path)
-        xhtml2pdf(xhtml_path, pdf_path)
+        margin = self.extract_pdf_settings()
+        fonts_css = '\nbody {font-family: var(--roman), serif;}\n'
+        self.export2xhtml(xhtml_path, remove_old=True, additional_css=fonts_css)
+        xhtml2pdf(xhtml_path, pdf_path, margin)
         remove(xhtml_path)
 
     def export2xml(self, output_path=''):

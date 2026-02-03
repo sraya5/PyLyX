@@ -23,7 +23,7 @@ div.layout.Example_ span.label {font-weight: bold;}
 div.layout.Problem_ span.label {font-weight: bold;}
 div.layout.Exercise_ span.label {font-weight: bold;}
 div.layout.Solution_ span.label {font-weight: bold;}
-div.layout.Remark_ span.label {content: "Remark";}
+div.layout.Remark_ span.label {font-style: italic;}
 div.layout.Claim_ span.label {font-style: italic;}
 div.layout.Case_ span.label {font-style: italic;}
 div.layout.Fact_ span.label {font-weight: bold;}

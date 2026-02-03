@@ -2,7 +2,7 @@
 
 
 body {
-      font-family: sans-serif;
+      font-family: var(--sans), sans-serif;
       font-size: medium;
       margin: 0 auto;
       color: light-dark(black, white);
@@ -101,7 +101,7 @@ dt.layout.Labeling, dt.layout.Description {min-width: 1.7cm;}
 dd.layout.Labeling, dd.layout.Description {flex: 1;}
 dt.layout.Description {font-weight: bold;}
 
-div.layout.LyX-Code, div.layout.Verbatim, div.layout.Verbatim_ {font-family: monospace;}
+div.layout.LyX-Code, div.layout.Verbatim, div.layout.Verbatim_ {font-family: var(--typewriter), monospace;}
 
 
 /* INSETS */
@@ -164,9 +164,9 @@ div.paragraph_spacing.double {line-height: 2;}
 div.paragraph_spacing.other {line-height: attrib(data-details);}
 div.noindent {text-indent: 0%;}
 
-span.family.roman {font-family: serif;}
-span.family.sans {font-family: sans-serif;}
-span.family.typewriter {font-family: monospace;}
+span.family.roman {font-family: var(--roman), serif;}
+span.family.sans {font-family: var(--sans), sans-serif;}
+span.family.typewriter {font-family: var(--typewriter), monospace;}
 
 span.inset.Foot span.label {
       display: inline;

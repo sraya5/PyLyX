@@ -133,10 +133,6 @@ def order_object(branch: list, obj):
         branch.append(obj[0])
 
 
-def is_known_object(command: str, category: str):
-    return command in OBJECTS and category in OBJECTS[command]
-
-
 def xml_command(line: str):
     if line.startswith('</'):
         command = line[2:-1].split('<')[0]
@@ -154,8 +150,8 @@ def xml_command(line: str):
 
 
 def perform_new_obj(branch: list, unknowns: dict, command: str, category: str, details: str, text: str, line: str):
-    if is_known_object(command, category):
-        if details in OBJECTS[command][category]:
+    if command in OBJECTS and (category in OBJECTS[command] or '*****' in OBJECTS[command]):
+        if category in OBJECTS[command] and details in OBJECTS[command][category]:
             if line.startswith('<'):
                 if line.endswith('">\n'):
                     line = line[:-3] + '" />\n'
@@ -172,12 +168,11 @@ def perform_new_obj(branch: list, unknowns: dict, command: str, category: str, d
                     obj = Container(obj)
         else:
             obj = LyXobj(command, command, category, details, text)
-        order_object(branch, obj)
     else:
         if len(branch) <= 1 or not branch[1].is_command('header'):
             unknowns[command] = {category: {details: {}}}
         obj = LyXobj('unknown', command, category, details, text)
-        order_object(branch, obj)
+    order_object(branch, obj)
 
 
 def is_end(line: str, branch: list) -> bool:
