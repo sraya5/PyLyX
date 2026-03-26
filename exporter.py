@@ -8,11 +8,11 @@ if __name__ == '__main__':
     fmt = input('export to format: ')
     output = output if output else splitext(lyx_file)[0]
     file = LyX(lyx_file)
-    if fmt == 'xhtml':
+    if fmt == 'xml':
+        file.export2xml(output)
+    elif fmt == 'xhtml':
         file.export2xhtml(output)
     elif fmt == 'pdf':
         file.export2pdf(output)
-    elif fmt == 'xml':
-        file.export2xml(output)
     else:
         file.export(fmt, output)
