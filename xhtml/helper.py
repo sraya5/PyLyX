@@ -6,7 +6,7 @@ from PyLyX.objects.Environment import Environment
 from PyLyX.xhtml.special_objects import prefixing
 
 MATHJAX = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
-CSS_FOLDER = join(PACKAGE_PATH, 'xhtml\\css')
+CSS_FOLDER = join(PACKAGE_PATH, 'xhtml', 'css')
 BASIC_CSS, RTL_CSS, LTR_CSS = 'basic.css', 'rtl.css', 'ltr.css'
 SECTIONS = ('Part', 'Chapter', 'Section', 'Subsection', 'Subsubsection', 'Paragraph', 'Subparagraph')
 INFORMATION = {'language', 'font_roman', 'font_sans', 'font_typewriter', 'secnumdepth', 'tocdepth', 'textclass', 'html_math_output', 'html_css_as_file'}

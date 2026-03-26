@@ -233,7 +233,9 @@ def perform_options(obj: Environment, first: str, second: str, path=None):
             if len(new_second) > 1 and new_second[1] != ':':  # i.e. second is not absolute path
                 new_second = join(path, new_second)
                 second = '"' + new_second if second.startswith('"') else new_second
-            second = second.replace('/', '\\')
+            # Normalise path separators for the current OS
+            import os
+            second = second.replace('/', os.sep).replace('\\', os.sep)
         obj.set(first, second)
         return True
     else:

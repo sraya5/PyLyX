@@ -1,17 +1,19 @@
+import sys
 from os import rename, remove
-from os.path import exists, join, split
+from os.path import exists, join, split, basename
 from xml.etree.ElementTree import Element
 from shutil import copy
-from playwright.sync_api import sync_playwright
-from playwright._impl._errors import TimeoutError
 from pathlib import Path
-from PyLyX.data.data import VERSION, CUR_FORMAT, USER_DIR, RTL_LANGS
+from PyLyX.data.data import CUR_FORMAT, RTL_LANGS, get_lyx_settings
 from PyLyX.objects.LyXobj import LyXobj
 from PyLyX.objects.Environment import Environment, Container
 from PyLyX.package_helper import detect_lang
 
 # the first and the second lines in any LyX document.
-PREFIX = f'#LyX {VERSION} created this file. For more info see https://www.lyx.org/\n\\lyxformat {CUR_FORMAT}\n'
+def get_prefix() -> str:
+    """Build the LyX file header line (lazy: resolves VERSION on first call)."""
+    version = get_lyx_settings()['version']
+    return f'#LyX {version:.1f} created this file. For more info see https://www.lyx.org/\n\\lyxformat {CUR_FORMAT}\n'
 
 
 def rec_append(obj1: LyXobj | Environment | Container | Element, obj2: LyXobj | Environment | Container):
@@ -109,7 +111,7 @@ def xhtml_style(root: Environment | Element, output_path: str, css_copy: bool | 
     for e in root[0].iterfind("img"):
         img_path = e.get('src', '')
         if exists(img_path):
-            img_name = img_path.split('\\')[-1]
+            img_name = basename(img_path)
             path = split(output_path)[0]
             copy(img_path, join(path, img_name))
             e.set('src', img_name)
@@ -160,7 +162,17 @@ def rec_find_and_replace(obj, old_str, new_str, command='', category='', details
 
 
 def export_bug_fix(before: bool):
-    preferences = join(USER_DIR, 'preferences')
+    """
+    Workaround for a LyX UI crash during export on Windows.
+    Temporarily comments out the \\ui_style line in the preferences file.
+    This is a Windows-only issue; the function is a no-op on other platforms.
+    """
+    if sys.platform != 'win32':
+        return
+    user_dir = get_lyx_settings()['user_dir']
+    preferences = join(user_dir, 'preferences')
+    if not exists(preferences):
+        return
     with open(preferences, 'r', encoding='utf8') as old:
         with open(preferences + '_n', 'w', encoding='utf8') as new:
             if before:
@@ -180,8 +192,17 @@ def export_bug_fix(before: bool):
 def xhtml2pdf(input_path: str, output_path: str, margin=None, page_format='A4', landscape=False, print_background=True,
         scale=1.0, display_header_footer=False, header='', footer=''):
     """
-    Convert XHTML file to PDF with advanced options
+    Convert XHTML file to PDF with advanced options.
+    Requires playwright: pip install playwright && playwright install chromium
     """
+    try:
+        from playwright.sync_api import sync_playwright
+        from playwright._impl._errors import TimeoutError as PlaywrightTimeoutError
+    except ImportError:
+        raise ImportError(
+            'playwright is required for PDF export via xhtml2pdf.\n'
+            'Install it with: pip install playwright && playwright install chromium'
+        )
     margin = {'top': '0', 'right': '0', 'bottom': '0', 'left': '0'} if margin is None else margin
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -200,7 +221,7 @@ def xhtml2pdf(input_path: str, output_path: str, margin=None, page_format='A4', 
 
             # Then wait for typesetting to complete
             page.evaluate("() => MathJax.typesetPromise")
-        except TimeoutError:
+        except PlaywrightTimeoutError:
             print('Warning: MathJax is not full loaded.')
 
         # Configure PDF options

@@ -1,7 +1,6 @@
 from os.path import splitext
 from xml.etree.ElementTree import ElementTree, tostring, indent
 from subprocess import run, CalledProcessError, TimeoutExpired
-from PyLyX.data.data import LYX_EXE, VERSION, CUR_FORMAT, BACKUP_DIR
 from PyLyX.objects.loader import load
 from PyLyX.xhtml.converter import convert
 from PyLyX.xhtml.helper import CSS_FOLDER
@@ -47,7 +46,7 @@ class LyX:
         else:
             path = correct_name(path, '.lyx')
             with open(path, 'x', encoding='utf8') as file:
-                file.write(PREFIX)
+                file.write(get_prefix())
                 file.write(self.__doc.obj2lyx())
 
     def save(self, backup=True):
@@ -64,7 +63,7 @@ class LyX:
             if exists(path):
                 remove(path)
             with open(path, 'x', encoding='utf8') as file:
-                file.write(PREFIX)
+                file.write(get_prefix())
                 if self.__doc.get('lyxformat', CUR_FORMAT) != CUR_FORMAT:
                     run_correct_brackets(self.__doc)
                 file.write(self.__doc.obj2lyx())
@@ -80,7 +79,8 @@ class LyX:
         """
         if exists(self.__full_path):
             name = split(self.__full_path)[1]
-            copy(self.__full_path, join(BACKUP_DIR, name))
+            backup_dir = get_lyx_settings()['backup_dir']
+            copy(self.__full_path, join(backup_dir, name))
             return True
         else:
             return False
@@ -127,13 +127,13 @@ class LyX:
             while fmt_ and fmt_[-1] in '1234567890':
                 fmt_ = fmt_[:-1]
             output_path = correct_name(output_path, fmt_)
-            cmd = [LYX_EXE, '--export-to', fmt, output_path, self.__full_path]
+            cmd = [get_lyx_settings()['lyx_exe'], '--export-to', fmt, output_path, self.__full_path]
         else:
-            cmd = [LYX_EXE, '--export', fmt, self.__full_path]
+            cmd = [get_lyx_settings()['lyx_exe'], '--export', fmt, self.__full_path]
 
         export_bug_fix(True)
         try:
-            run(cmd, timeout=timeout, shell=True)
+            run(cmd, timeout=timeout, shell=(sys.platform == 'win32'))
             export_bug_fix(False)
             return True
         except TimeoutExpired:
@@ -141,7 +141,7 @@ class LyX:
         except CalledProcessError as e:
             print(f'An error occurred while converting the file {self.__full_path}.\nError massage is: "{e}"')
         except FileNotFoundError:
-            print(f'Make sure the path "{LYX_EXE}" is the correct lyx.exe path.')
+            print(f'Make sure lyx is installed and accessible. Run: pylyx.data.data.get_lyx_settings()')
         except Exception as e:
             print(f'An error occurred while converting the file {self.__full_path}.\nError massage is: "{e}"')
         export_bug_fix(False)
@@ -238,7 +238,8 @@ class LyX:
             self.backup()
         with open(self.__full_path, 'r', encoding='utf8') as file:
             first_line = file.readline()
-        if first_line.startswith(f'#LyX {VERSION}'):
+        lyx_version = get_lyx_settings()['version']
+        if first_line.startswith(f'#LyX {lyx_version:.1f}'):
             updated_now = False
         else:
             self.export('lyx')

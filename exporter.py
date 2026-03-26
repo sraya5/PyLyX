@@ -15,4 +15,4 @@ if __name__ == '__main__':
     elif fmt == 'xml':
         file.export2xml(output)
     else:
-        print('invalid format')
+        file.export(fmt, output)
