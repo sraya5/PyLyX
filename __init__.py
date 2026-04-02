@@ -1,12 +1,14 @@
-from os.path import splitext
-from xml.etree.ElementTree import ElementTree, tostring, indent
-from subprocess import run, CalledProcessError, TimeoutExpired
-from PyLyX.info.info import get_format
+from os import remove, rename
+from os.path import splitext, exists, split, join
+from xml.etree.ElementTree import ElementTree, Element, tostring, indent
+from PyLyX.info.info import get_format, get_lyx_settings
 from PyLyX.loader.loader import load
+from PyLyX.loader.Environment import Environment, Container
+from PyLyX.loader.LyXobj import LyXobj
 from PyLyX.xhtml.converter import convert
 from PyLyX.xhtml.helper import CSS_FOLDER
 from PyLyX.package_helper import correct_name, default_path, run_correct_brackets
-from PyLyX.init_helper import *
+from PyLyX.init_helper import get_prefix, rec_append, export_bug_fix, old_file_remove, xhtml_style, xhtml2pdf, rec_find, rec_find_and_replace
 
 
 class LyX:
@@ -82,6 +84,7 @@ class LyX:
         if exists(self.__full_path):
             name = split(self.__full_path)[1]
             backup_dir = get_lyx_settings()['backup_dir']
+            from shutil import copy
             copy(self.__full_path, join(backup_dir, name))
             return True
         else:
@@ -134,7 +137,9 @@ class LyX:
             cmd = [get_lyx_settings()['lyx_exe'], '--export', fmt, self.__full_path]
 
         export_bug_fix(True)
+        from subprocess import run, CalledProcessError, TimeoutExpired
         try:
+            import sys
             run(cmd, timeout=timeout, shell=(sys.platform == 'win32'))
             export_bug_fix(False)
             return True
