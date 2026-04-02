@@ -4,7 +4,7 @@ from PyLyX.data.data import PACKAGE_PATH, RTL_LANGS
 from PyLyX.loader.LyXobj import LyXobj, DEFAULT_RANK
 from PyLyX.package_helper import detect_lang
 
-with open(join(PACKAGE_PATH, 'xhtml\\data\\texts.json'), 'r', encoding='utf8') as f:
+with open(join(PACKAGE_PATH, 'xhtml', 'data', 'texts.json'), 'r', encoding='utf8') as f:
     TEXTS = load(f)
 
 
