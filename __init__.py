@@ -1,7 +1,8 @@
 from os.path import splitext
 from xml.etree.ElementTree import ElementTree, tostring, indent
 from subprocess import run, CalledProcessError, TimeoutExpired
-from PyLyX.objects.loader import load
+from PyLyX.data.data import get_format
+from PyLyX.loader.loader import load
 from PyLyX.xhtml.converter import convert
 from PyLyX.xhtml.helper import CSS_FOLDER
 from PyLyX.package_helper import correct_name, default_path, run_correct_brackets
@@ -64,7 +65,8 @@ class LyX:
                 remove(path)
             with open(path, 'x', encoding='utf8') as file:
                 file.write(get_prefix())
-                if self.__doc.get('lyxformat', CUR_FORMAT) != CUR_FORMAT:
+                cur_format = get_format()
+                if self.__doc.get('lyxformat', cur_format) != cur_format:
                     run_correct_brackets(self.__doc)
                 file.write(self.__doc.obj2lyx())
             if exists(self.__full_path):

@@ -1,6 +1,6 @@
 from importlib import import_module
 from PyLyX.xhtml.helper import CSS_FOLDER
-from PyLyX.objects.Environment import Environment
+from PyLyX.loader.Environment import Environment
 
 
 def main(head: Environment, body: Environment, info: dict, css_folder=CSS_FOLDER):

@@ -3,15 +3,16 @@ from os.path import split, splitext, exists, join
 from sys import argv
 from json import load
 from PyLyX import LyX
-from PyLyX.data.data import USER, USER_DIR, SYS_DIR, PACKAGE_PATH
-from PyLyX.objects.Environment import Environment, Container
+from PyLyX.data.data import PACKAGE_PATH, get_lyx_settings
+from PyLyX.data.all_platforms import get_downloads_dir
+from PyLyX.loader.Environment import Environment, Container
 from tables_creator import create_table
 from compare_bind import scan_file
 
 
-with open('data\\shifted.json', 'r') as f:
+with open(join('data', 'shifted.json'), 'r') as f:
     SHIFTED_DICT = load(f)
-with open('data\\keys.json', 'r') as f:
+with open(join('data', 'keys.json'), 'r') as f:
     KEYS_DICT = load(f)
 
 LAYOUTS = {0: 'Part',
@@ -127,14 +128,14 @@ def write_all_files(full_path: str, final_path: str):
     result.save_as(final_path)
 
 
-DEFAULT_PATH = join(SYS_DIR, 'bind')
+DEFAULT_PATH = join(get_lyx_settings()['sys_dir'], 'bind')
 DEFAULT_NAME = 'cua.bind'
-PERSONAL_PATH = join(USER_DIR, 'bind')
+PERSONAL_PATH = join(get_lyx_settings()['user_dir'], 'bind')
 
 
 def main():
     path, name = DEFAULT_PATH, DEFAULT_NAME
-    final_path, final_name = f'{USER}\\Downloads', 'table_of_shortcuts.lyx'
+    final_path, final_name = get_downloads_dir(), 'table_of_shortcuts.lyx'
     if len(argv) == 1:
         pass
     elif len(argv) == 2:

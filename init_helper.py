@@ -4,16 +4,16 @@ from os.path import exists, join, split, basename
 from xml.etree.ElementTree import Element
 from shutil import copy
 from pathlib import Path
-from PyLyX.data.data import CUR_FORMAT, RTL_LANGS, get_lyx_settings
-from PyLyX.objects.LyXobj import LyXobj
-from PyLyX.objects.Environment import Environment, Container
+from PyLyX.data.data import RTL_LANGS, get_lyx_settings, get_format
+from PyLyX.loader.LyXobj import LyXobj
+from PyLyX.loader.Environment import Environment, Container
 from PyLyX.package_helper import detect_lang
 
 # the first and the second lines in any LyX document.
 def get_prefix() -> str:
     """Build the LyX file header line (lazy: resolves VERSION on first call)."""
     version = get_lyx_settings()['version']
-    return f'#LyX {version:.1f} created this file. For more info see https://www.lyx.org/\n\\lyxformat {CUR_FORMAT}\n'
+    return f'#LyX {version:.1f} created this file. For more info see https://www.lyx.org/\n\\lyxformat {get_format()}\n'
 
 
 def rec_append(obj1: LyXobj | Environment | Container | Element, obj2: LyXobj | Environment | Container):

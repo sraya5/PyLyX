@@ -1,6 +1,6 @@
 from copy import deepcopy
 from xml.etree.ElementTree import Element
-from PyLyX.data.data import OBJECTS
+from PyLyX.loader.objects import OBJECTS
 
 DEFAULT_RANK = 100
 
@@ -46,7 +46,7 @@ class LyXobj(Element):
         :param father: An element for be nested in.
         :return: Boolean value and message for explaining.
         """
-        from PyLyX.objects.Environment import Environment, Container
+        from PyLyX.loader.Environment import Environment, Container
         if type(father) in {LyXobj, Environment, Container}:
             if not father.is_open():
                 msg = f'{father} is closed.'
@@ -66,7 +66,7 @@ class LyXobj(Element):
         """
         Append obj as the last sub-element of self.
         """
-        from PyLyX.objects.Environment import Environment, Container
+        from PyLyX.loader.Environment import Environment, Container
         if type(obj) in {LyXobj, Environment, Container}:
             result, msg = obj.can_be_nested_in(self)
             if result:
@@ -87,7 +87,7 @@ class LyXobj(Element):
         """
         Insert obj as sub-element of self in given index.
         """
-        from PyLyX.objects.Environment import Environment, Container
+        from PyLyX.loader.Environment import Environment, Container
         if type(obj) in (LyXobj, Environment, Container):
             result, msg = obj.can_be_nested_in(self)
             if result:
@@ -249,7 +249,7 @@ class LyXobj(Element):
         return False
 
     def copy(self):
-        from PyLyX.objects.Environment import Environment, Container
+        from PyLyX.loader.Environment import Environment, Container
         if type(self) is Environment:
             return Environment(self.command(), self.category(), self.details(), self.text, self.tail, self.attrib, self.is_open())
         elif type(self) is Container:

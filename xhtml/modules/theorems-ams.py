@@ -1,6 +1,6 @@
 from os.path import join
-from PyLyX.data.data import THEOREMS, TRANSLATE
-from PyLyX.objects.Environment import Environment
+from PyLyX.loader.objects import THEOREMS, TRANSLATE
+from PyLyX.loader.Environment import Environment
 from PyLyX.xhtml.special_objects import prefixing
 from PyLyX.xhtml.helper import create_css, CSS_FOLDER
 

@@ -1,6 +1,6 @@
 from os.path import split, splitext, join
 from string import ascii_letters
-from PyLyX.objects.LyXobj import LyXobj
+from PyLyX.loader.LyXobj import LyXobj
 
 
 def correct_name(full_path: str, extension: str) -> str:

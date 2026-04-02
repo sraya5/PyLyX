@@ -1,4 +1,5 @@
-from PyLyX.data.all_platforms import *
+from os.path import exists, join
+from PyLyX.data.all_platforms import USER, read_backup_dir, get_downloads_dir
 
 def _registry_find_lyx() -> list[dict]:
     """
@@ -52,7 +53,6 @@ def _registry_find_lyx() -> list[dict]:
 
 def find_settings_windows() -> dict:
     roaming   = join(USER, 'AppData', 'Roaming')
-    downloads = join(USER, 'Downloads')
 
     for entry in _registry_find_lyx():
         lyx_path = entry['lyx_path'].rstrip('\\')
@@ -64,7 +64,7 @@ def find_settings_windows() -> dict:
         sys_dir  = join(lyx_path, 'Resources')
         return dict(
             version=version, lyx_path=lyx_path, user_dir=user_dir,
-            backup_dir=read_backup_dir(user_dir, downloads),
+            backup_dir=read_backup_dir(user_dir, get_downloads_dir()),
             lyx_exe=lyx_exe, sys_dir=sys_dir,
         )
 

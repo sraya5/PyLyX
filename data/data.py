@@ -1,75 +1,36 @@
-"""
-PyLyX.data.data
----------------
-Platform-aware LyX installation discovery and shared constants.
-
-LyX does NOT need to be installed to use the parser, object model, or XHTML
-converter. Only 'export()' and 'update_version()' on the 'LyX' class require
-the LyX executable. Therefore, 'find_settings()' is called lazily the first
-time those features are used, and the module imports cleanly on any platform
-even when LyX is not installed.
-"""
-
-
 import sys
 from json import load
-from os.path import expanduser, join, dirname, abspath
-from PyLyX.data.windows import find_settings_windows
-from PyLyX.data.macos import find_settings_macos
-from PyLyX.data.linux import find_settings_linux
+from os.path import join, dirname, abspath
+from PyLyX.data.all_platforms import get_downloads_dir as _get_downloads_dir
 
-# ---------------------------------------------------------------------------
-# Package-level constants (no LyX required)
-# ---------------------------------------------------------------------------
-
-USER         = expanduser('~')
+DOWNLOADS_DIR = _get_downloads_dir()  # real path per OS (XDG on Linux)
 # PACKAGE_PATH = directory that *contains* the PyLyX package (the repo root).
 # dirname twice: once out of data/, once out of PyLyX/.
 PACKAGE_PATH = dirname(dirname(abspath(__file__)))
-
-RTL_LANGS  = {'hebrew': 'He-IL'}
-CUR_FORMAT = 620
-DOWNLOADS_DIR = join(USER, 'Downloads')
+with open(join(PACKAGE_PATH, 'data', 'data', 'rtl_langs.json'),    'r', encoding='utf8') as f:
+    RTL_LANGS: dict[str, str] = load(f)
 
 
-# ---------------------------------------------------------------------------
-# JSON data — always available; path built with os.path.join (cross-platform)
-# ---------------------------------------------------------------------------
-
-def _data(name: str) -> str:
-    """Return the full path to a JSON file inside data/objects/."""
-    return join(PACKAGE_PATH, 'data', 'objects', name)
-
-
-OBJECTS = {}
-
-with open(_data('designs.json'),      'r', encoding='utf8') as f:
-    DESIGNS = load(f);   OBJECTS.update(DESIGNS)
-with open(_data('par_set.json'),      'r', encoding='utf8') as f:
-    PAR_SET = load(f);   OBJECTS.update(PAR_SET)
-with open(_data('layouts.json'),      'r', encoding='utf8') as f:
-    LAYOUTS = load(f);   OBJECTS.update(LAYOUTS)
-with open(_data('theorems-ams.json'), 'r', encoding='utf8') as f:
-    THEOREMS = load(f)['layout']
-    LAYOUTS['layout'].update(THEOREMS)
-    OBJECTS.update(THEOREMS)
-with open(_data('insets.json'),       'r', encoding='utf8') as f:
-    INSETS = load(f);    OBJECTS.update(INSETS)
-with open(_data('primaries.json'),    'r', encoding='utf8') as f:
-    PRIMARIES = load(f); OBJECTS.update(PRIMARIES)
-with open(_data('doc_set.json'),      'r', encoding='utf8') as f:
-    DOC_SET = load(f);   OBJECTS.update(DOC_SET)
-with open(_data('xml_obj.json'),      'r', encoding='utf8') as f:
-    XML_OBJ = load(f);   OBJECTS.update(XML_OBJ)
-with open(_data('ends.json'),         'r', encoding='utf8') as f:
-    ENDS = load(f)
-with open(_data('translate.json'),    'r', encoding='utf8') as f:
-    TRANSLATE = load(f)
+def version_to_format(version: float) -> int:
+    """
+    Return the lyxformat number for a given LyX version.
+    Falls back to the highest known format if the version is newer than the table.
+    """
+    with open(join(PACKAGE_PATH, 'data', 'data', 'formats.json'), 'r', encoding='utf8') as f:
+        # Keys are strings ("2.3") in JSON; convert to float on load.
+        formats: dict[float, int] = {float(k): v for k, v in load(f).items()}
+    key = round(version, 1)
+    if key in formats:
+        return formats[key]
+    if key > max(formats):
+        return max(formats.values())   # best guess for future versions
+    return min(formats.values())        # very old version
 
 
-# ---------------------------------------------------------------------------
-# LyX settings — resolved on demand, not at import time
-# ---------------------------------------------------------------------------
+def get_format() -> int:
+    """Return the lyxformat number for the currently installed LyX version."""
+    return version_to_format(get_lyx_settings()['version'])
+
 
 _settings_cache: dict | None = None
 
@@ -85,9 +46,12 @@ def get_lyx_settings() -> dict:
     global _settings_cache
     if _settings_cache is None:
         if sys.platform == 'win32':
+            from PyLyX.data.windows import find_settings_windows
             _settings_cache = find_settings_windows()
         elif sys.platform == 'darwin':
+            from PyLyX.data.macos import find_settings_macos
             _settings_cache = find_settings_macos()
         else:
+            from PyLyX.data.linux import find_settings_linux
             _settings_cache = find_settings_linux()
     return _settings_cache

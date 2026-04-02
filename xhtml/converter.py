@@ -1,9 +1,10 @@
 from os.path import join
 from json import load
 from xml.etree.ElementTree import Element
-from PyLyX.data.data import PAR_SET, PACKAGE_PATH, TRANSLATE
-from PyLyX.objects.LyXobj import LyXobj, DEFAULT_RANK
-from PyLyX.objects.Environment import Environment, Container
+from PyLyX.data.data import PACKAGE_PATH
+from PyLyX.loader.objects import PAR_SET, TRANSLATE
+from PyLyX.loader.LyXobj import LyXobj, DEFAULT_RANK
+from PyLyX.loader.Environment import Environment, Container
 from PyLyX.xhtml.special_objects import perform_table, perform_cell, perform_lists, perform_box, perform_text, \
     perform_image, correct_formula, TEXTS
 from PyLyX.xhtml.helper import scan_head, perform_lang, create_title, css_and_js, numbering_and_toc, \

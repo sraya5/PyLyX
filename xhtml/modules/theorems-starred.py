@@ -1,4 +1,4 @@
-from PyLyX.objects.Environment import Environment
+from PyLyX.loader.Environment import Environment
 from PyLyX.xhtml.helper import CSS_FOLDER
 
 

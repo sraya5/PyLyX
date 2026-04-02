@@ -1,6 +1,7 @@
-from os.path import dirname
+from os.path import dirname, exists, join
 from shutil import which
-from PyLyX.data.all_platforms import *
+from subprocess import run
+from PyLyX.data.all_platforms import USER, read_backup_dir, lyx_version_from_exe, get_downloads_dir
 
 def _pkgmgr_find_lyx() -> dict | None:
     """
@@ -104,8 +105,6 @@ def _linux_sys_dir(version: float) -> str:
 
 
 def find_settings_linux() -> dict:
-    downloads = join(USER, 'Downloads')
-
     # 1. Ask the package manager / container runtime
     entry = _pkgmgr_find_lyx()
 
@@ -142,6 +141,6 @@ def find_settings_linux() -> dict:
     return dict(
         version=version, lyx_path=dirname(exe),
         user_dir=_linux_user_dir(version),
-        backup_dir=read_backup_dir(_linux_user_dir(version), downloads),
+        backup_dir=read_backup_dir(_linux_user_dir(version), get_downloads_dir()),
         lyx_exe=exe, sys_dir=_linux_sys_dir(version),
     )

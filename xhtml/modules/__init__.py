@@ -2,7 +2,7 @@ from os.path import join, exists
 from importlib import import_module
 from PyLyX.data.data import PACKAGE_PATH
 from PyLyX.xhtml.helper import CSS_FOLDER
-from PyLyX.objects.Environment import Environment
+from PyLyX.loader.Environment import Environment
 
 
 def perform_module(module: str, head: Environment, body: Environment, info: dict, css_folder=CSS_FOLDER):

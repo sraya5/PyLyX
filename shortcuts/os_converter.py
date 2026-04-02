@@ -1,7 +1,7 @@
 from os import scandir
 from string import ascii_letters
 from os.path import split, join, isfile
-from PyLyX.data.data import USER_DIR, DOWNLOADS_DIR
+from PyLyX.data.data import DOWNLOADS_DIR, get_lyx_settings
 from bind2lyx import SHIFTED_DICT, KEYS_DICT
 
 
@@ -29,7 +29,7 @@ def win2mac(full_path, dst=None):
 
 
 def main():
-    src = join(USER_DIR, 'bind')
+    src = join(get_lyx_settings()['user_dir'], 'bind')
     for entry in scandir(src):
         path = join(src, entry)
         if isfile(path) and path.endswith('.bind'):

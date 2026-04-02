@@ -1,5 +1,5 @@
-from PyLyX.objects.Environment import Environment
-from PyLyX.data.data import THEOREMS
+from PyLyX.loader.Environment import Environment
+from PyLyX.loader.objects import THEOREMS
 from PyLyX.xhtml.helper import CSS_FOLDER
 
 

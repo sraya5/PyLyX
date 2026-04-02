@@ -1,7 +1,7 @@
 from json import load
 from os.path import join
 from PyLyX.data.data import PACKAGE_PATH, RTL_LANGS
-from PyLyX.objects.LyXobj import LyXobj, DEFAULT_RANK
+from PyLyX.loader.LyXobj import LyXobj, DEFAULT_RANK
 from PyLyX.package_helper import detect_lang
 
 with open(join(PACKAGE_PATH, 'xhtml\\data\\texts.json'), 'r', encoding='utf8') as f:

@@ -1,8 +1,8 @@
 from os.path import split, join
 from xml.etree.ElementTree import fromstring, ParseError
-from PyLyX.data.data import ENDS, OBJECTS, DESIGNS, XML_OBJ
-from PyLyX.objects.LyXobj import LyXobj
-from PyLyX.objects.Environment import Environment, Container
+from PyLyX.loader.objects import ENDS, OBJECTS, DESIGNS, XML_OBJ
+from PyLyX.loader.LyXobj import LyXobj
+from PyLyX.loader.Environment import Environment, Container
 
 
 ############################################### MAIN ###############################################
@@ -49,7 +49,7 @@ def load(full_path: str):
             one_line(file, line, branch, unknowns, full_path)
 
         if unknowns:
-            print('unknown objects:', unknowns)
+            print('unknown data:', unknowns)
 
     return root
 

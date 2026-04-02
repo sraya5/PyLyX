@@ -1,7 +1,7 @@
 from copy import deepcopy
 from xml.etree.ElementTree import Element, tostring
-from PyLyX.data.data import OBJECTS, DESIGNS, PAR_SET, ENDS, DOC_SET, XML_OBJ
-from PyLyX.objects.LyXobj import LyXobj, DEFAULT_RANK, xml2txt
+from PyLyX.loader.objects import OBJECTS, DESIGNS, PAR_SET, ENDS, DOC_SET, XML_OBJ
+from PyLyX.loader.LyXobj import LyXobj, DEFAULT_RANK, xml2txt
 
 
 class Environment(LyXobj):
