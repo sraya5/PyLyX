@@ -3,7 +3,7 @@ from json import load
 from os.path import join, dirname, abspath
 
 PACKAGE_PATH = dirname(dirname(abspath(__file__)))
-with open(join(PACKAGE_PATH, 'info', 'info', 'formats.json'),   'r', encoding='utf8') as f:
+with open(join(PACKAGE_PATH, 'info', 'data', 'formats.json'),   'r', encoding='utf8') as f:
     _VERSION_TO_FORMAT: dict[float, int] = {float(k): v for k, v in load(f).items()}
 
 _settings_cache: dict | None = None  # for caching

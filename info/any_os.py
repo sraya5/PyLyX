@@ -1,6 +1,6 @@
 import re
 import sys
-from any_os.path import expanduser, exists, join
+from os.path import expanduser, exists, join
 from subprocess import run
 
 USER = expanduser('~')

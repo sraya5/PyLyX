@@ -4,9 +4,9 @@ from PyLyX.info.info import PACKAGE_PATH
 from PyLyX.loader.LyXobj import LyXobj, DEFAULT_RANK
 from PyLyX.package_helper import detect_lang
 
-with open(join(PACKAGE_PATH, 'info', 'info', 'rtl_langs.json'), 'r', encoding='utf8') as f:
+with open(join(PACKAGE_PATH, 'xhtml', 'data', 'rtl_langs.json'), 'r', encoding='utf8') as f:
     RTL_LANGS: dict[str, str] = load(f)
-with open(join(PACKAGE_PATH, 'xhtml', 'info', 'texts.json'), 'r', encoding='utf8') as f:
+with open(join(PACKAGE_PATH, 'xhtml', 'data', 'texts.json'), 'r', encoding='utf8') as f:
     TEXTS = load(f)
 
 

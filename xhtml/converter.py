@@ -11,11 +11,11 @@ from PyLyX.xhtml.helper import scan_head, perform_lang, create_title, css_and_js
     number_foots_and_captions, mathjax, viewport, CSS_FOLDER
 from PyLyX.xhtml.modules import perform_module
 
-with open(join(PACKAGE_PATH, 'xhtml', 'info', 'tags.json'), 'r', encoding='utf8') as f:
+with open(join(PACKAGE_PATH, 'xhtml', 'data', 'tags.json'), 'r', encoding='utf8') as f:
     TAGS = load(f)
-with open(join(PACKAGE_PATH, 'xhtml', 'info', 'tables.json'), 'r', encoding='utf8') as f:
+with open(join(PACKAGE_PATH, 'xhtml', 'data', 'tables.json'), 'r', encoding='utf8') as f:
     TABLES = load(f)
-with open(join(PACKAGE_PATH, 'xhtml', 'info', 'light_dark.json'), 'r', encoding='utf8') as f:
+with open(join(PACKAGE_PATH, 'xhtml', 'data', 'light_dark.json'), 'r', encoding='utf8') as f:
     LIGHT_DARK = load(f)
 
 

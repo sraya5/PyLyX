@@ -13,7 +13,7 @@ BASIC_CSS, RTL_CSS, LTR_CSS = 'basic.css', 'rtl.css', 'ltr.css'
 SECTIONS = ('Part', 'Chapter', 'Section', 'Subsection', 'Subsubsection', 'Paragraph', 'Subparagraph')
 INFORMATION = {'language', 'font_roman', 'font_sans', 'font_typewriter', 'secnumdepth', 'tocdepth', 'textclass',
                'html_math_output', 'html_css_as_file'}
-with open(join(PACKAGE_PATH, 'info', 'info', 'rtl_langs.json'), 'r', encoding='utf8') as f:
+with open(join(PACKAGE_PATH, 'xhtml', 'data', 'rtl_langs.json'), 'r', encoding='utf8') as f:
     RTL_LANGS: dict[str, str] = load(f)
 
 def scan_head(head: Environment):
