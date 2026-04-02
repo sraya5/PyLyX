@@ -4,7 +4,7 @@ from sys import argv
 from json import load
 from PyLyX import LyX
 from PyLyX.info.info import PACKAGE_PATH, get_lyx_settings
-from PyLyX.info.any_os import get_downloads_dir
+from PyLyX.info.any_os import DOWNLOADS_DIR
 from PyLyX.loader.Environment import Environment, Container
 from tables_creator import create_table
 from compare_bind import scan_file
@@ -135,7 +135,7 @@ PERSONAL_PATH = join(get_lyx_settings()['user_dir'], 'bind')
 
 def main():
     path, name = DEFAULT_PATH, DEFAULT_NAME
-    final_path, final_name = get_downloads_dir(), 'table_of_shortcuts.lyx'
+    final_path, final_name = DOWNLOADS_DIR, 'table_of_shortcuts.lyx'
     if len(argv) == 1:
         pass
     elif len(argv) == 2:

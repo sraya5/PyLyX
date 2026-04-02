@@ -1,7 +1,7 @@
 from os.path import dirname, exists, join
 from shutil import which
 from subprocess import run
-from PyLyX.info.any_os import USER, read_backup_dir, lyx_version_from_exe, get_downloads_dir
+from PyLyX.info.any_os import USER, read_backup_dir, lyx_version_from_exe, DOWNLOADS_DIR
 
 def _pkgmgr_find_lyx() -> dict | None:
     """
@@ -141,6 +141,6 @@ def find_settings_linux() -> dict:
     return dict(
         version=version, lyx_path=dirname(exe),
         user_dir=_linux_user_dir(version),
-        backup_dir=read_backup_dir(_linux_user_dir(version), get_downloads_dir()),
+        backup_dir=read_backup_dir(_linux_user_dir(version), DOWNLOADS_DIR),
         lyx_exe=exe, sys_dir=_linux_sys_dir(version),
     )

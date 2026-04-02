@@ -1,5 +1,5 @@
 from os.path import exists, join
-from PyLyX.info.any_os import USER, read_backup_dir, get_downloads_dir
+from PyLyX.info.any_os import USER, read_backup_dir, DOWNLOADS_DIR
 
 def _registry_find_lyx() -> list[dict]:
     """
@@ -64,7 +64,7 @@ def find_settings_windows() -> dict:
         sys_dir  = join(lyx_path, 'Resources')
         return dict(
             version=version, lyx_path=lyx_path, user_dir=user_dir,
-            backup_dir=read_backup_dir(user_dir, get_downloads_dir()),
+            backup_dir=read_backup_dir(user_dir, DOWNLOADS_DIR),
             lyx_exe=lyx_exe, sys_dir=sys_dir,
         )
 

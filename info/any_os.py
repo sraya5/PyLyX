@@ -6,6 +6,7 @@ from subprocess import run
 USER = expanduser('~')
 
 
+##### LyX version #####
 def lyx_version_from_exe(exe: str):
     """Run 'lyx --version' and return the version as a float (e.g. 2.3)."""
     try:
@@ -35,23 +36,7 @@ def version_from_path(path: str) -> float:
     return float(m.group(1)) if m else 2.0
 
 
-def get_downloads_dir() -> str:
-    """
-    Return the user's Downloads directory using the OS-appropriate method.
-
-    - Windows : KNOWNFOLDERID {374DE290-…} via ctypes/shell32, falls back to ~/Downloads
-    - macOS   : ~/Downloads  (always correct; the folder is created by the OS)
-    - Linux   : XDG_DOWNLOAD_DIR from ~/.config/user-dirs.dirs via xdg-user-dir,
-                falls back to ~/Downloads
-    """
-    if sys.platform == 'win32':
-        return _downloads_windows()
-    elif sys.platform == 'darwin':
-        return join(USER, 'Downloads')   # always correct on macOS
-    else:
-        return _downloads_xdg()
-
-
+##### downloads dir #####
 def _downloads_windows() -> str:
     """Ask Windows shell for the real Downloads folder path."""
     try:
@@ -104,7 +89,27 @@ def _downloads_xdg() -> str:
 
     return join(USER, 'Downloads')
 
+def get_downloads_dir() -> str:
+    """
+    Return the user's Downloads directory using the OS-appropriate method.
 
+    - Windows : KNOWNFOLDERID {374DE290-…} via ctypes/shell32, falls back to ~/Downloads
+    - macOS   : ~/Downloads  (always correct; the folder is created by the OS)
+    - Linux   : XDG_DOWNLOAD_DIR from ~/.config/user-dirs.dirs via xdg-user-dir,
+                falls back to ~/Downloads
+    """
+    if sys.platform == 'win32':
+        return _downloads_windows()
+    elif sys.platform == 'darwin':
+        return join(USER, 'Downloads')   # always correct on macOS
+    else:
+        return _downloads_xdg()
+
+
+DOWNLOADS_DIR = get_downloads_dir()
+
+
+##### backup dir ######
 def read_backup_dir(user_dir: str, fallback: str) -> str:
     preferences = join(user_dir, 'preferences')
     if exists(preferences):

@@ -1,7 +1,7 @@
 from os.path import dirname,exists, join
 from shutil import which
 from subprocess import run
-from PyLyX.info.any_os import USER, read_backup_dir, lyx_version_from_exe, version_from_path, get_downloads_dir
+from PyLyX.info.any_os import USER, read_backup_dir, lyx_version_from_exe, version_from_path, DOWNLOADS_DIR
 
 
 def _macos_user_dir(version: float) -> str:
@@ -43,7 +43,7 @@ def find_settings_macos() -> dict:
         user_dir = _macos_user_dir(version)
         return dict(
             version=version, lyx_path=app, user_dir=user_dir,
-            backup_dir=read_backup_dir(user_dir, get_downloads_dir()),
+            backup_dir=read_backup_dir(user_dir, DOWNLOADS_DIR),
             lyx_exe=exe, sys_dir=join(app, 'Contents', 'Resources'),
         )
 
@@ -54,7 +54,7 @@ def find_settings_macos() -> dict:
         user_dir = _macos_user_dir(version)
         return dict(
             version=version, lyx_path=dirname(dirname(exe)), user_dir=user_dir,
-            backup_dir=read_backup_dir(user_dir, get_downloads_dir()),
+            backup_dir=read_backup_dir(user_dir, DOWNLOADS_DIR),
             lyx_exe=exe, sys_dir='/usr/local/share/lyx',
         )
 
