@@ -2,7 +2,7 @@ from sys import argv
 from os.path import join
 from json import dumps, load
 from PyLyX.package_helper import correct_name
-from PyLyX.data.data import DOWNLOADS_DIR
+from PyLyX.info.any_os import get_downloads_dir
 
 
 def translate_dicts(primary: dict, secondary: dict):
@@ -14,7 +14,7 @@ def translate_dicts(primary: dict, secondary: dict):
     return dictionary
 
 
-def translate_json(primary: str, secondary: str, output_path=join(DOWNLOADS_DIR, 'macros.json')):
+def translate_json(primary: str, secondary: str, output_path=join(get_downloads_dir(), 'macros.json')):
     primary, secondary = correct_name(primary, '.json'), correct_name(secondary, '.json')
     with open(primary, 'r', encoding='utf8') as file:
         primary = load(file)
@@ -60,7 +60,7 @@ def extract_macros(macros_file: str):
 def main():
     if len(argv) > 1:
         input_path = argv[1]
-        output_path = argv[2] if len(argv) > 2 else join(DOWNLOADS_DIR, 'macros.json')
+        output_path = argv[2] if len(argv) > 2 else join(get_downloads_dir(), 'macros.json')
     else:
         raise Exception('input is empty')
 

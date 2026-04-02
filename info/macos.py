@@ -1,7 +1,7 @@
-from os.path import dirname,exists, join
+from any_os.path import dirname,exists, join
 from shutil import which
 from subprocess import run
-from PyLyX.data.all_platforms import USER, read_backup_dir, lyx_version_from_exe, version_from_path, get_downloads_dir
+from PyLyX.info.any_os import USER, read_backup_dir, lyx_version_from_exe, version_from_path, get_downloads_dir
 
 
 def _macos_user_dir(version: float) -> str:

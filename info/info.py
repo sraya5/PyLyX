@@ -1,15 +1,9 @@
 import sys
 from json import load
 from os.path import join, dirname, abspath
-from PyLyX.data.all_platforms import get_downloads_dir as _get_downloads_dir
 
-# PACKAGE_PATH = directory that *contains* the PyLyX package (the repo root).
-# dirname twice: once out of data/, once out of PyLyX/.
 PACKAGE_PATH = dirname(dirname(abspath(__file__)))
-DOWNLOADS_DIR = _get_downloads_dir()  # real path per OS (XDG on Linux)
-with open(join(PACKAGE_PATH, 'data', 'data', 'rtl_langs.json'), 'r', encoding='utf8') as f:
-    RTL_LANGS: dict[str, str] = load(f)
-with open(join(PACKAGE_PATH, 'data', 'data', 'formats.json'),   'r', encoding='utf8') as f:
+with open(join(PACKAGE_PATH, 'info', 'info', 'formats.json'),   'r', encoding='utf8') as f:
     _VERSION_TO_FORMAT: dict[float, int] = {float(k): v for k, v in load(f).items()}
 
 _settings_cache: dict | None = None  # for caching
@@ -26,13 +20,13 @@ def get_lyx_settings() -> dict:
     global _settings_cache
     if _settings_cache is None:
         if sys.platform == 'win32':
-            from PyLyX.data.windows import find_settings_windows
+            from PyLyX.info.windows import find_settings_windows
             _settings_cache = find_settings_windows()
         elif sys.platform == 'darwin':
-            from PyLyX.data.macos import find_settings_macos
+            from PyLyX.info.macos import find_settings_macos
             _settings_cache = find_settings_macos()
         else:
-            from PyLyX.data.linux import find_settings_linux
+            from PyLyX.info.linux import find_settings_linux
             _settings_cache = find_settings_linux()
     return _settings_cache
 

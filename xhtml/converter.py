@@ -1,7 +1,7 @@
 from os.path import join
 from json import load
 from xml.etree.ElementTree import Element
-from PyLyX.data.data import PACKAGE_PATH
+from PyLyX.info.info import PACKAGE_PATH
 from PyLyX.loader.objects import PAR_SET, TRANSLATE
 from PyLyX.loader.LyXobj import LyXobj, DEFAULT_RANK
 from PyLyX.loader.Environment import Environment, Container
@@ -11,11 +11,11 @@ from PyLyX.xhtml.helper import scan_head, perform_lang, create_title, css_and_js
     number_foots_and_captions, mathjax, viewport, CSS_FOLDER
 from PyLyX.xhtml.modules import perform_module
 
-with open(join(PACKAGE_PATH, 'xhtml', 'data', 'tags.json'), 'r', encoding='utf8') as f:
+with open(join(PACKAGE_PATH, 'xhtml', 'info', 'tags.json'), 'r', encoding='utf8') as f:
     TAGS = load(f)
-with open(join(PACKAGE_PATH, 'xhtml', 'data', 'tables.json'), 'r', encoding='utf8') as f:
+with open(join(PACKAGE_PATH, 'xhtml', 'info', 'tables.json'), 'r', encoding='utf8') as f:
     TABLES = load(f)
-with open(join(PACKAGE_PATH, 'xhtml', 'data', 'light_dark.json'), 'r', encoding='utf8') as f:
+with open(join(PACKAGE_PATH, 'xhtml', 'info', 'light_dark.json'), 'r', encoding='utf8') as f:
     LIGHT_DARK = load(f)
 
 
@@ -68,9 +68,9 @@ def create_attributes(obj: LyXobj, info: dict, keep_data=False):
 
     if keep_data:
         for key in old_attrib:
-            new_attrib[f'data-{key}'] = old_attrib[key].replace('"', '')
+            new_attrib[f'info-{key}'] = old_attrib[key].replace('"', '')
     elif 'filename' in old_attrib:
-        new_attrib['data-filename'] = old_attrib['filename'].replace('"', '')
+        new_attrib['info-filename'] = old_attrib['filename'].replace('"', '')
     return new_attrib
 
 
@@ -85,11 +85,11 @@ def create_text(obj, new_attrib: dict):
     elif obj.is_details('ref'):
         text = new_attrib.get('href', '#')[1:]
         new_txt = ''
-        if new_attrib.get('data-LatexCommand') == 'ref':
+        if new_attrib.get('info-LatexCommand') == 'ref':
             for c in text:
                 if c in '1234567890.':
                     new_txt += c
-        elif new_attrib.get('data-LatexCommand') == 'nameref':
+        elif new_attrib.get('info-LatexCommand') == 'nameref':
             pass
         if new_txt:
             return new_txt
@@ -187,8 +187,8 @@ def convert(root, css_files=(), css_folder=CSS_FOLDER, js_files=(), js_in_head=F
 
 
 def perform_include(obj: LyXobj):
-    if 'data-filename' in obj.attrib:
-        path = obj.get('data-filename')
+    if 'info-filename' in obj.attrib:
+        path = obj.get('info-filename')
         if path.endswith('.lyx'):
             from PyLyX import LyX
             root = LyX(path).get_doc()

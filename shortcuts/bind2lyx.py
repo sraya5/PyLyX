@@ -3,8 +3,8 @@ from os.path import split, splitext, exists, join
 from sys import argv
 from json import load
 from PyLyX import LyX
-from PyLyX.data.data import PACKAGE_PATH, get_lyx_settings
-from PyLyX.data.all_platforms import get_downloads_dir
+from PyLyX.info.info import PACKAGE_PATH, get_lyx_settings
+from PyLyX.info.any_os import get_downloads_dir
 from PyLyX.loader.Environment import Environment, Container
 from tables_creator import create_table
 from compare_bind import scan_file
@@ -122,7 +122,7 @@ def write_all_files(full_path: str, final_path: str):
 
     obj, files = one_file(full_path)
     files.append(join(PERSONAL_PATH, 'user.bind'))
-    result = LyX(join(PACKAGE_PATH, r'shortcuts\data\template.lyx'), writeable=False)
+    result = LyX(join(PACKAGE_PATH, 'shortcuts', 'data', 'template.lyx'), writeable=False)
     result.append(obj)
     recursive_write(split(full_path)[0], files, result)
     result.save_as(final_path)

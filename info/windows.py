@@ -1,5 +1,5 @@
 from os.path import exists, join
-from PyLyX.data.all_platforms import USER, read_backup_dir, get_downloads_dir
+from PyLyX.info.any_os import USER, read_backup_dir, get_downloads_dir
 
 def _registry_find_lyx() -> list[dict]:
     """

@@ -1,7 +1,8 @@
 from os import scandir
 from string import ascii_letters
 from os.path import split, join, isfile
-from PyLyX.data.data import DOWNLOADS_DIR, get_lyx_settings
+from PyLyX.info.any_os import get_downloads_dir
+from PyLyX.info.info import get_lyx_settings
 from bind2lyx import SHIFTED_DICT, KEYS_DICT
 
 
@@ -15,6 +16,8 @@ def win2mac(full_path, dst=None):
         dst = path
         new_file = join(dst, f'copy_{name}')
     else:
+        if name == 'cua.bind':
+            name = 'mac.bind'
         new_file = join(dst, name)
     with open(new_file, 'x') as new:
         with open(full_path, 'r') as old:
@@ -33,7 +36,7 @@ def main():
     for entry in scandir(src):
         path = join(src, entry)
         if isfile(path) and path.endswith('.bind'):
-            win2mac(path, DOWNLOADS_DIR)
+            win2mac(path, get_downloads_dir())
 
 
 if __name__ == '__main__':

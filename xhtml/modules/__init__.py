@@ -1,6 +1,6 @@
 from os.path import join, exists
 from importlib import import_module
-from PyLyX.data.data import PACKAGE_PATH
+from PyLyX.info.info import PACKAGE_PATH
 from PyLyX.xhtml.helper import CSS_FOLDER
 from PyLyX.loader.Environment import Environment
 

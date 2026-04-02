@@ -49,7 +49,7 @@ def load(full_path: str):
             one_line(file, line, branch, unknowns, full_path)
 
         if unknowns:
-            print('unknown data:', unknowns)
+            print('unknown info:', unknowns)
 
     return root
 

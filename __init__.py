@@ -1,7 +1,7 @@
 from os.path import splitext
 from xml.etree.ElementTree import ElementTree, tostring, indent
 from subprocess import run, CalledProcessError, TimeoutExpired
-from PyLyX.data.data import get_format
+from PyLyX.info.info import get_format
 from PyLyX.loader.loader import load
 from PyLyX.xhtml.converter import convert
 from PyLyX.xhtml.helper import CSS_FOLDER
@@ -143,7 +143,7 @@ class LyX:
         except CalledProcessError as e:
             print(f'An error occurred while converting the file {self.__full_path}.\nError massage is: "{e}"')
         except FileNotFoundError:
-            print(f'Make sure lyx is installed and accessible. Run: pylyx.data.data.get_lyx_settings()')
+            print(f'Make sure lyx is installed and accessible. Run: pylyx.info.info.get_lyx_settings()')
         except Exception as e:
             print(f'An error occurred while converting the file {self.__full_path}.\nError massage is: "{e}"')
         export_bug_fix(False)
@@ -161,7 +161,7 @@ class LyX:
         :param js_files: paths of js files for add to the xhtml file.
         :param js_in_head: do you want insert the js elements to the xhtml head? (if False insert the js elements to the body's end)
         :param remove_old: do you want to remove the old xhtml version (if exists)?
-        :param keep_data: do you want save data from the LyX file, which is unnecessary for xhtml?
+        :param keep_data: do you want save info from the LyX file, which is unnecessary for xhtml?
         :param replaces: a dictionary of string replaces (useful when you want change the xhtml file path)
         """
         output_path = default_path(self.__full_path, '.xhtml', output_path)

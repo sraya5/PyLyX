@@ -4,10 +4,9 @@ from os.path import exists, join, split, basename
 from xml.etree.ElementTree import Element
 from shutil import copy
 from pathlib import Path
-from PyLyX.data.data import RTL_LANGS, get_lyx_settings, get_format
+from PyLyX.info.info import get_lyx_settings, get_format
 from PyLyX.loader.LyXobj import LyXobj
 from PyLyX.loader.Environment import Environment, Container
-from PyLyX.package_helper import detect_lang
 
 # the first and the second lines in any LyX document.
 def get_prefix() -> str:
@@ -30,39 +29,6 @@ def rec_append(obj1: LyXobj | Environment | Container | Element, obj2: LyXobj | 
             obj1.append(obj2)
             return True
     return False
-
-
-def line_functions(lyx_file, func, args=()) -> bool:
-    path = lyx_file.get_path()
-
-    is_changed = False
-    with open(path, 'r', encoding='utf8') as old:
-        with open(path + '_', 'x', encoding='utf8') as new:
-            for line in old:
-                new_line = func(line, *args)
-                if new_line != line:
-                    is_changed = True
-                new.write(new_line)
-
-    if is_changed:
-        remove(path)
-        rename(path + '_', lyx_file.get_path())
-    else:
-        remove(path + '_')
-    return is_changed
-
-
-def one_link(line: str):
-    start = 'name "'
-    end = '"\n'
-    if line.startswith(start) and line.endswith(end):
-        text = line[len(start):-len(end)]
-        if detect_lang(text) in RTL_LANGS:
-            lst = text.split()
-            lst.reverse()
-            text = ' '.join(lst)
-            line = start + text + end
-    return line
 
 
 def old_file_remove(output_path: str, remove_old: bool | None = None):

@@ -1,10 +1,10 @@
 from json import load
 from os.path import join
-from PyLyX.data.data import PACKAGE_PATH
+from PyLyX.info.info import PACKAGE_PATH
 
 def _data(name: str) -> str:
-    """Return the full path to a JSON file inside data/data/."""
-    return join(PACKAGE_PATH, 'loader', 'data', name)
+    """Return the full path to a JSON file inside info/info/."""
+    return join(PACKAGE_PATH, 'loader', 'info', name)
 
 OBJECTS = {}
 
