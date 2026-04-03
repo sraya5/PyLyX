@@ -1,11 +1,10 @@
 from os.path import join
-from json import load
 from PyLyX.package_helper import correct_name
 from PyLyX.info.info import PACKAGE_PATH
 from PyLyX.loader.objects import TRANSLATE
 from PyLyX.loader.LyXobj import LyXobj
 from PyLyX.loader.Environment import Environment
-from PyLyX.xhtml.special_objects import prefixing
+from PyLyX.xhtml.special_objects import prefixing, RTL_LANGS
 
 MATHJAX = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
 CSS_FOLDER = join(PACKAGE_PATH, 'xhtml', 'css')
@@ -13,8 +12,6 @@ BASIC_CSS, RTL_CSS, LTR_CSS = 'basic.css', 'rtl.css', 'ltr.css'
 SECTIONS = ('Part', 'Chapter', 'Section', 'Subsection', 'Subsubsection', 'Paragraph', 'Subparagraph')
 INFORMATION = {'language', 'font_roman', 'font_sans', 'font_typewriter', 'secnumdepth', 'tocdepth', 'textclass',
                'html_math_output', 'html_css_as_file'}
-with open(join(PACKAGE_PATH, 'xhtml', 'data', 'rtl_langs.json'), 'r', encoding='utf8') as f:
-    RTL_LANGS: dict[str, str] = load(f)
 
 def scan_head(head: Environment):
     dictionary = {}

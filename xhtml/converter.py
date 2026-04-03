@@ -68,9 +68,9 @@ def create_attributes(obj: LyXobj, info: dict, keep_data=False):
 
     if keep_data:
         for key in old_attrib:
-            new_attrib[f'info-{key}'] = old_attrib[key].replace('"', '')
+            new_attrib[f'data-{key}'] = old_attrib[key].replace('"', '')
     elif 'filename' in old_attrib:
-        new_attrib['info-filename'] = old_attrib['filename'].replace('"', '')
+        new_attrib['data-filename'] = old_attrib['filename'].replace('"', '')
     return new_attrib
 
 

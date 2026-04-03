@@ -89,6 +89,7 @@ def _downloads_xdg() -> str:
 
     return join(USER, 'Downloads')
 
+
 def get_downloads_dir() -> str:
     """
     Return the user's Downloads directory using the OS-appropriate method.
